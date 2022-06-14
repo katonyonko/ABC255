@@ -9,6 +9,9 @@ _INPUT = """\
 2
 2 1
 1 2
+3
+1 3 2
+2 1 3
 """
 
 sys.stdin = io.StringIO(_INPUT)
@@ -21,20 +24,18 @@ for __ in range(case_no):
   I=list(map(int,input().split()))
   P=[P[i]-1 for i in range(N)]
   I=[I[i]-1 for i in range(N)]
-  pd={P[i]:i for i in range(N)}
   id={I[i]:i for i in range(N)}
   ans=[[-1,-1] for i in range(N)]
   flg=0
   def rec(ps,pe,ist,ie):
-    if pe-ps!=ie-ist:
+    global flg
+    if id[P[ps]]<ist or id[P[ps]]>ie:
       flg=1
-    if id[P[ps]]==ist: ans[P[ps]][0]=-1
-    else:
-      if pe>ps:
-        ans[P[ps]][0]=P[ps+1]
-        if id[P[ps]]<ist or id[P[ps]]>ie: flg=1
-        rec(ps+1,ps+id[P[ps]]-ist,ist,id[P[ps]]-1)
-    if ps+id[P[ps]]-ist<pe:
+      return -1
+    if id[P[ps]]>ist:
+      ans[P[ps]][0]=P[ps+1]
+      rec(ps+1,ps+id[P[ps]]-ist,ist,id[P[ps]]-1)
+    if id[P[ps]]<ie:
       ans[P[ps]][1]=P[ps+id[P[ps]]-ist+1]
       rec(ps+id[P[ps]]-ist+1,pe,id[P[ps]]+1,ie)
   rec(0,N-1,0,N-1)
